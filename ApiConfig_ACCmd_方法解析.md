@@ -90,3 +90,18 @@ ApiConfig_ACCmd_Note1
             
 ```
 
+
+
+### AC > Service Permissions 
+
+```java
+	String[] perms = { "sub", "getCompany", "setCompany", "delCompany", "getProduct", "setProduct",
+                    "delProduct", "getUser", "setUser", "delUser" };
+            ArrayList<String> al = new ArrayList<>(Arrays.asList(perms));
+            Document sendPerm = new Document("APConfig", new Document("name", "APConfig").append("perms", al));
+
+
+
+{"APConfig": {"name": "APConfig", "perms": ["sub", "getCompany", "setCompany", "delCompany", "getProduct", "setProduct", "delProduct", "getUser", "setUser", "delUser"]}}
+```
+
