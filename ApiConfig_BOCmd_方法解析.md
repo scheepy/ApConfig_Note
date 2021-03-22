@@ -1,4 +1,4 @@
-ApiConfig_BOCmd_Note1
+# ApiConfig_BOCmd_方法解析
 
 BOCmd 操作資料庫資料
 
