@@ -1,3 +1,9 @@
+# 前言
+
+編寫順序就是流程順序
+
+
+
 # ApConfig 整理流程
 
 ### ApConfigApplication
@@ -14,7 +20,7 @@
 
 ApConfig這個服務的 Spring's 註冊檔
 
-#### 問題0:
+#### 問題0 :
 
 > **DataCoreAPI 用途 ?**
 >
@@ -25,4 +31,18 @@ ApConfig這個服務的 Spring's 註冊檔
 #### 問題1 @Bean XXX生成:
 
 > @Bean 生成時 Thread.sleep(sleepTime)
+
+### APConfig
+
+因為這個類實作一個SmartLifecycle，而這個接口讓**Spring在加載初始化Beans之後自動執行 SmartLifeCycle's 的實作方法**。
+
+> 問題1: **有兩種stop()方法, **方法執行的時機
+>
+> 問題2: **stop()** 為什麼跟start( )方法不對稱, 意思是start() 開的, stop() 沒有跟者關。
+>
+> 問題3: **log.trace(AtomicBoolean bRunning) **?
+
+### ACCmd
+
+在`APConfig.java`中 start() 裡置入了 `accmd.init() , accmd.sub()`。 
 
