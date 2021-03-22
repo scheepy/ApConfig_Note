@@ -1,5 +1,17 @@
 ApiConfig_ACCmd_Note1
 
+
+
+> 問題1. subCh 是只有一種值嗎 ? 
+
+**AC 會不定時的發出權限列表的查詢命令, 需要管理使用者命令權限的服務請接收此命令並回應正確的權限列表.**
+
+ACCmd 初始化會確認訂閱這個Group, 則AC會不斷發出查詢命令,
+
+在sub()方法已有寫好的 IDocumentCallBack ， 會幫使用者自動回復。
+
+
+
 ```java
 1. protected String subCh "ac-query-perms"
 2. protected String sendSvc "ac"
