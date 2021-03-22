@@ -46,3 +46,5 @@ ApConfig這個服務的 Spring's 註冊檔
 
 在`APConfig.java`中 start() 裡置入了 `accmd.init() , accmd.sub()`。 
 
+
+
