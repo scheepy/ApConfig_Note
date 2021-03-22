@@ -46,5 +46,15 @@ ApConfig這個服務的 Spring's 註冊檔
 
 在`APConfig.java`中 start() 裡置入了 `accmd.init() , accmd.sub()`。 
 
+如果subCh是唯一的話, 那 accmd.init( ) 會幫使用者訂閱 這個Group， AC會不定時對Group 發出查詢命令。
+
+Sub() 裡面有寫好自動回復。
+
+
+
+### BOCmd
+
+
+
 
 
