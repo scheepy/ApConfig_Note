@@ -284,7 +284,9 @@ public static String unzip(byte[] source) {
 {"s":"ac","c":"login","d":{"SESSION":"ss2:ffm:ws#6ce8c135f1cd432f97c9072148c2dd31","IDLE_TIMEOUT":720000,"pd.setting":{},"quote.settings":[],"PERMS":{"apconfig":["getcompany","setcompany","delcompany","getproduct","setproduct","delproduct","getuser","setuser","deluser","sub","delexuser","setexuser","getexuser","delexproduct","setexproduct","getexproduct","delexcompany","setexcompany","getexcompany","search"],"basicdata":["lhsi","lhri","lhdi","lhcqyz"],"bginfo":["sub","unsub","enable","disable","loss","del","badge"],"contractspec":["exchangespec","commodityspec","tradingstatus","holiday"],"historydata":["ss","query","hday","hmon","twahcd","cqyz","sectick","otick","eps","greeks"],"k":["sub","unsub"],"o":["sub","unsub","mkt","query","custom"],"og":["custom","mkt","unsub","sub","snapshot"],"optcloud":["getivrank","getoirank"],"optdata":["sub","unsub","mkt"],"pa":["memo","alter","delete","status","history","request","sub"],"q":["sub","unsub","mkt","omk","tbl"],"symbol":["sub","get","unsub"],"symservice":["get","sub","unsub"]},"TKS":["ss2:ffm:ws#6ce8c135f1cd432f97c9072148c2dd31@KVyKwLdp"],"PING_TIME":60000},"cd":1,"r":"test123","lt":true}
 ```
 
-### 問題1. 為什麼我的Search指令會出現cd: -10000 ?
+### 問題1. 為什麼我的Search指令會出現cd: -10000 ?  
+
+回答1: 因為 Dispatcher之後沒設定好。
 
 ```java
 //送出的search cmd
@@ -293,6 +295,8 @@ public static String unzip(byte[] source) {
 //收到的回覆
 2021/03/22 15:47:21.514 [HttpClient@bcec361-15] INFO  c.i.s.b.d.j.SecureClientSocket - onTextMessage() - {"s":"APConfig","c":"search","cd":-10000}
 ```
+
+
 
 
 
