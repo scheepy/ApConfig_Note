@@ -54,13 +54,7 @@ Sub() 裡面有寫好自動回復。
 
 ### BOCmd
 
-Sub( ) 裏頭分兩個部分，一個是 JobHandler的轉發 ， 另一個是 BO的回應。
 
-BO的回應:  **訂閱 Queue_DataEndPoint**
 
-~~JobHandler 處理的 Client Cmd~~
 
-> 問題1.  是誰在哪個時機透過對 Queue_DataEndPoint 送訊息 ?
->
-> ~~有人操作BO ，根據某個機制**BO的回應就是往 DataEndPoint去寄送東西**~~
 
