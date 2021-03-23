@@ -1,6 +1,9 @@
 # ApiConfig_BOCmd_方法解析
 
-BOCmd 操作資料庫資料
+>BOCmd **兩個訂閱** :
+>
+>>1. BO的回應 Server Client 使用 BO網頁做查詢，會將指令透過 Queue_DataEndPoint 做傳送，BOCmd 接收作處理。
+>>2. jobHandler的轉發  轉發時機是當ClientA 去做 setConfig , delConfig 的時候，同步得知有人做更新。
 
 
 
