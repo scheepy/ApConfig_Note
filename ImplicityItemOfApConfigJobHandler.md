@@ -1,10 +1,10 @@
 ### 閱讀前必知
 
-​	IStringCallBack/IDataCallBack<String>
+	- IStringCallBack/IDataCallBack<String>
 
-​	IDataCallBack<T> 是針對任意類型資料,不在式 
+	- IDataCallBack<T> 是針對任意類型資料,不在是
 
-​	IDocumentCallBack 單一物種
+	- IDocumentCallBack 單一物種
 ​	
 getConfig
 ​	使用者在AC中設定的存取範圍 alFilter getACInfo()
