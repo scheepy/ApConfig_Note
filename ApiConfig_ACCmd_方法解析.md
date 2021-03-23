@@ -71,7 +71,7 @@ ACCmd 初始化會確認訂閱這個Group, 則AC會不斷發出查詢命令,
                 isetting.set("APConfig", setting);
 
 
-
+	
             log.info("ACCmd.SubCh=" + subCh);
             log.info("ACCmd.SendSvc=" + sendSvc);
             log.info("ACCmd.SendCh=" + sendCh);
