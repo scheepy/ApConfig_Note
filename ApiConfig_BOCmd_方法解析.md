@@ -59,8 +59,11 @@ iQD.queueUnsubscribe(subCh);
 #### getDoc(String serviceID, String channel, Document doc)
 
 ```java
+			
 			//payload 稱作乘載, 當成放資料庫資料的購物車
-            Document rPayload = (Document) doc.get("payload"); //doc 從哪裡來 ?
+            Document rPayload = (Document) doc.get("payload"); 
+			//getDoc 何時會被呼叫 ? QueueSubScirbe("DataEndPoint", CB);
+			// CB 裏頭作為 doc's type 呼叫 
         
 {
     payload: {
