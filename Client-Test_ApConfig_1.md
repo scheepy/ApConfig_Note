@@ -248,3 +248,67 @@
 
 ```
 
+## setUser  失敗回傳
+
+```json
+{
+  "s": "APConfig",
+  "c": "setUser",
+  "d": {
+    "msg": "No config data."
+  },
+  "cd": -18,
+  "r": "threadID",
+  "lt": true
+}
+
+{
+  "s": "APConfig",
+  "c": "setUser",
+  "d": {
+    "msg": "Loss token \"d\""
+  },
+  "cd": -14,
+  "r": "threadID",
+  "lt": true
+}
+
+
+
+```
+
+## setUser成功指令,回傳
+
+```json
+//指令
+{
+  "s": "APConfig",
+  "c": "setUser",
+  "d": {
+    "COMPANY": "ss2",
+    "PRODUCT": "ffm",
+    "USER": "historydata",
+    "PROFILE": "0323_01",
+    "data": {
+      "data": {
+        "say": "hello"
+      }
+    }
+  },
+  "r": "threadID"
+}
+
+//回傳
+{
+  "s": "APConfig",
+  "c": "setUser",
+  "d": {
+    "msg": "Update Success."
+  },
+  "cd": 0,
+  "r": "threadID",
+  "lt": true
+}
+
+```
+
