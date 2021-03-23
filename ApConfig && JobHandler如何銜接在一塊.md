@@ -20,15 +20,10 @@ sendJson(JobHandler handler,String sys,
 
 
 
-
-
-
-
-
-
 ```java
 /*
 *	寫在 BOCmd's sub()
+	當一個ClientA setConfig or DeleteConfig 時候，能做到即時通知
 */  
 
 // 來自jobhandler轉發
