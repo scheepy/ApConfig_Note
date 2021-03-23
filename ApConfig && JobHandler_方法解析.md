@@ -91,7 +91,11 @@ searchConfig 中 每一筆 UID + CPU  代表 搜尋結果的資料。
 
 ----
 
+**設置**
 
+> setConfig 裏頭 和 getConfig 裏頭 看到 jso.cy and jso.pt 的意思是 排除 company 及 product ?
+
+假設排除 Company，upc="p"，sendChannel = uids[1] : uids[2]
 
 
 
