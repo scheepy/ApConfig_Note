@@ -1,4 +1,6 @@
 > 問題1: handle(SessionObject so, JSONObject message) 的參數 JSONObject message從哪裡來 ?
+>
+> 回答: Dispatcher 從 Client 納編得來。
 
 client -> Dispatcher :不可缺少欄位 s(Service), c(command)
 
