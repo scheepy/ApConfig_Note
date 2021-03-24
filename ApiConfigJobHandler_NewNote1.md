@@ -1,8 +1,11 @@
 # 前言
 
-Handler裏頭的方法 XXXConfig 是指DB裏頭的資料, 我猜那些資料就是 被稱作 XXX註冊吧。
+1. Handler裏頭的方法 XXXConfig 是指 XXX方法 ， 譬如說 getConfig 就是指 getUser , getEXUser , etc...
 
-再來是Handler 只有在 delConfig, SetConfig, 會透過 ApConfig-Transferstation-Queue 傳給 ApConfig-BOCmd-Sub()
+2. SessionObject so.getACSessionSvcInfo(JobHandler this )  其中的 APConfig 下面的 Range 存放的是，
+   這個使用者作為管理階層，其管理的對象。
+
+3. Handler 只有在 delConfig, SetConfig, 會透過 ApConfig-Transferstation-Queue 傳給 ApConfig-BOCmd-Sub()
 
 ```java
    //cmd 先拚出 (EX,strEX), 在選定執行方法
@@ -144,9 +147,23 @@ if (acinfoDoc == null || !acinfoDoc.containsKey("range"))
 
 # 問題
 
-##### [ 1. AC權限? ] (#AC)
+##### [  AC   不知道權限] (#AC)
 
-為什麼稱之權限? AC 有 company, product, user, profile
+> 每一個Service，有自己的權限，以APConfig 來說，就有getXXX, getEXooo, etc....。
+>
+> 但這些 AC 都不知道，他會透過**頻道去問**每個Service ，而Service 再去 **同一個頻道回答*。**
+>
+> 以 APConfig 這一支服務來說，他就有一支 ACCmd  來負責回應 svc AC。
+
+[ Spring Service(APConfig)](#APConfig)
+
+>APConfigJobHandler 和 APConfig 這支程式的運作關聯不太大。
+>
+>**訊息上來說**， APConfig 只有在 BOCmd 上面 有來自 JobHandler 的 SetConfig , delConfig。
+>
+>**權限上來說**，svc AC 並不知道 APConfig 這一支服務下有什麼權限 ? 這裡的 APConfig 是指 Spring Service("APConfig") ，也就是 JobHandler 上面的那一支 Spring Annotation ，而 APConfig 的權限是只 **前端使用者** 可以使用的 JobHandler 中的哪些指令。
+>
+>
 
 ##### 2. JSONObject 用途
 
@@ -225,8 +242,8 @@ SessionObject so 代表使用者連線
 ###### **setConfig(SessionObject so, JSONObject jso, String cmd, String r)**
 
 	1. ACCmd v 代表什麼意思?
- 	2. 方法本身拿來更新資料用
- 	3. **Queue寄送**
+	2. 方法本身拿來更新資料用
+	3. **Queue寄送**
 
 ###### **doSubAction(SessionObject so, JSONObject jso, String cmd, String r)**
 
