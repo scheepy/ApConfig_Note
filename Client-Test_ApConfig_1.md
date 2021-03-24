@@ -162,6 +162,18 @@
 }
 ```
 
+## 額外登入訊息
+
+```json
+"scheepyWant": {
+      "alFilter": [],
+      "so.getUniqueId": "pdpf:ss2:ffm:historydata",
+      "so.getACSessionSvcInfo(APConfigJobHandler)": null,
+      "so.getPermissions": null,
+      "so.getLoginUserId()": "historydata"
+    }
+```
+
 
 
 ## Search
@@ -300,10 +312,42 @@ Document guQry1 = new Document("s","APConfig").append("c", "getUser")
 .append("data", new Document("say","hello"))).append("r", "threadID");
 
 {"s":"APConfig","c":"getUser","d":{"v":1,"profile":"0323_01","data":{"say":"hello"}},"cd":0,"r":"threadID","lt":true}
-//=================== Observation2 ===========================
-// 1. 我先更新狀態
+//==============================================
+
+//我把搜尋結果直接打印
+ so.sendJson(this, cmd, DocumentHelper.toJson(dbDoc), 0, r, true);
+
+Document guQry = new Document("s","APConfig").append("c", "getUser")
+.append("d", new Document("COMPANY", "ss2").append("PRODUCT", "ffm")
+.append("USER", "historydata"));
 
 
+{
+  "d": {
+    "_id": {
+      "$oid": "5bc944f5ffaa1525250952d4"
+    },
+    "company": "ss2",
+    "product": "ffm",
+    "profile": "default",
+    "user": "historydata",
+    "data": {
+      "data": {
+        "say": "hello"
+      }
+    },
+    "v": 20,
+    "filter": {
+      "company": "ss2",
+      "product": "ffm",
+      "user": "historydata",
+      "profile": "default"
+    }
+  }
+}
+//====================觀察======================
+// 1. 要搜尋的條件都整理進去 識別字串 d 裏頭
+// 2. 沒寫 profile 的條件，就會以 profile="default" 去搜尋
 ```
 
 
