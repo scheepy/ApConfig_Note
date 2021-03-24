@@ -1,3 +1,9 @@
+# 前題
+
+---
+
+> 由 Dispatcher 拼湊的 SessionObject so.getUniqueId( ) 回傳的 ("UID", CPU) ，對於使用者來說，**他們的帳號是什麼 ?**
+
 # 測試帳號:: 結果
 
 ---
@@ -248,9 +254,74 @@
 
 ```
 
+## getUser
+
+```json
+Document suinner = new Document("data", new Document("say","hello"));
+Document setUserQry = new Document("s","APConfig").append("c", "setUser")
+	.append("d", new Document("COMPANY", "ss2").append("PRODUCT", "ffm")
+	.append("USER", "historydata").append("PROFILE", "0323_01").append("data", suinner)).append("r", "threadID");
+
+{
+  "s": "APConfig",
+  "c": "getUser",
+  "d": {
+    "v": 20,
+    "profile": "default",
+    "data": {
+      "data": {
+        "say": "hello"
+      }
+    }
+  },
+  "cd": 0,
+  "r": "threadID",
+  "lt": true
+}
+
+//================ Observation_1===================================
+// 1. getUser 回傳結果中的 s, c, d ， 其中 d 包含 的 v(version), profile, data
+// 2. 為什麼我剛剛設定的 profile 沒有複寫上去呢 ? 是因為大小寫有別嗎 ? 我用到的修改指令是 ("PROFILE", "0323_01")
+
+
+//先更新使用者的訊息
+Document suQry = new Document("s","APConfig").append("c", "setUser")
+.append("d", new Document("COMPANY", "ss2").append("PRODUCT", "ffm")
+.append("USER", "historydata").append("profile", "0323_01")
+.append("data", new Document("say","hello"))).append("r", "threadID");
+
+{"s":"APConfig","c":"setUser","d":{"msg":"Update Success."},"cd":0,"r":"threadID","lt":true}
+//-------------------
+
+//取得上次更新的那筆資料
+Document guQry1 = new Document("s","APConfig").append("c", "getUser")
+.append("d", new Document("COMPANY", "ss2").append("PRODUCT", "ffm")
+.append("USER", "historydata").append("profile", "0323_01")
+.append("data", new Document("say","hello"))).append("r", "threadID");
+
+{"s":"APConfig","c":"getUser","d":{"v":1,"profile":"0323_01","data":{"say":"hello"}},"cd":0,"r":"threadID","lt":true}
+//=================== Observation2 ===========================
+// 1. 我先更新狀態
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
 ## setUser  失敗回傳
 
 ```json
+	Document setUserQry = new Document("s","APConfig").append("c", "setUser")
+							.append("d", new Document("profile", "0323_1")).append("r", "threadID");
+
 {
   "s": "APConfig",
   "c": "setUser",
@@ -262,6 +333,7 @@
   "lt": true
 }
 
+//=================================================
 {
   "s": "APConfig",
   "c": "setUser",
@@ -273,7 +345,10 @@
   "lt": true
 }
 
-
+//=====================總結========================
+//結合上述的兩則訊息來看， 要setUser 必須滿足兩點
+// 1. 傳送指令必須有識別字串 s, c, d ，其中 d 必須包含 data這個子標籤
+// 2. data 描述的 Config 必須在資料庫確實存在
 
 ```
 
