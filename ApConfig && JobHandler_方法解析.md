@@ -2,7 +2,7 @@
 >
 > 回答: Dispatcher 從 Client 納編得來。
 
-client -> Dispatcher :不可缺少欄位 s(Service), c(command)
+client -> Dispatcher :不可缺少欄位 s(Service), c(command), d + data
 
 Dispatcher -> ApConfigJobHandler : 中間產出的 JSONObject_message 比上面至少多新增一個 JSONObject d 一個屬性
 
