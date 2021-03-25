@@ -2,7 +2,8 @@
 
 ---
 
-> 由 Dispatcher 拼湊的 SessionObject so.getUniqueId( ) 回傳的 ("UID", CPU) ，對於使用者來說，**他們的帳號是什麼 ?**
+> 由 Dispatcher 拼湊的 SessionObject so.getUniqueId( ) 回傳的 ("pdpf", CPU) ，對於使用者來說，**他們的帳號是什麼 ?**
+> **帳號就是CPU**
 
 # 測試帳號:: 結果
 
@@ -179,58 +180,8 @@
 ## Search
 
 ```json
-{
-  "s": "APConfig",
-  "c": "search",
-  "d": {
-    "cpuf": {
-      "company": "ss2",
-      "product": "*",
-      "user": "historydata",
-      "profile": "default"
-    },
-    "data": [
-      {
-        "company": "ss2",
-        "product": "ffm",
-        "profile": "default",
-        "user": "historydata"
-      },
-      {
-        "company": "ss2",
-        "product": "ffm",
-        "profile": "default5",
-        "user": "historydata"
-      },
-      {
-        "company": "ss2",
-        "product": "ffm",
-        "profile": "default6",
-        "user": "historydata"
-      },
-      {
-        "company": "ss2",
-        "product": "ffm",
-        "profile": "default7",
-        "user": "historydata"
-      },
-      {
-        "company": "ss2",
-        "product": "ffm",
-        "profile": "default77",
-        "user": "historydata"
-      },
-      {
-        "company": "ss2",
-        "product": "ffm",
-        "profile": "default79",
-        "user": "historydata"
-      }
-    ]
-  },
-  "cd": 0,
-  "r": ""
-}
+1. 搜尋條件大小寫有別
+2. 
 ```
 
 
@@ -238,12 +189,20 @@
 ## sub
 
 ```json
+//sub 的 Query不能缺少d，但裏頭的資料的資料填什麼都無所謂。
+//因為sub這東西的Filter就是使用 SessionObject so.getUniqueId()中的 CPU，然後一層一層的疊上去，如下列 Step1 ~ 3。
+Step 1. d:{"company":"ss2","product":{"$exists":false},"user":{"$exists":false}},"cd":0,"r":"查詢公司"}
+Step 2. d:{"company":"ss2","product":"ffm","user":{"$exists":false}},"cd":0,"r":"查詢產品"}
+Step 3. d:{"company":"ss2","product":"ffm","user":"historydata"},"cd":0,"r":"查詢使用者"}
+
+//======== sub 結果
+// c:company, p:product, u:user
 {
   "s": "APConfig",
   "c": "sub",
   "d": {
     "c": {
-      "default": 9,// profile + version
+      "default": 9,
       "default9": 1
     },
     "p": {
@@ -251,7 +210,9 @@
       "default9": 3
     },
     "u": {
-      "default": 15,
+      "0323_01": 1,
+      "0324_HelloWorld": 15,
+      "default": 23,
       "default5": 2,
       "default6": 0,
       "default7": 2,
@@ -266,168 +227,27 @@
 
 ```
 
-## getUser
+
+
+## 
 
 ```json
-Document suinner = new Document("data", new Document("say","hello"));
-Document setUserQry = new Document("s","APConfig").append("c", "setUser")
-	.append("d", new Document("COMPANY", "ss2").append("PRODUCT", "ffm")
-	.append("USER", "historydata").append("PROFILE", "0323_01").append("data", suinner)).append("r", "threadID");
-
-{
-  "s": "APConfig",
-  "c": "getUser",
-  "d": {
-    "v": 20,
-    "profile": "default",
-    "data": {
-      "data": {
-        "say": "hello"
-      }
-    }
-  },
-  "cd": 0,
-  "r": "threadID",
-  "lt": true
-}
-
-//================ Observation_1===================================
-// 1. getUser 回傳結果中的 s, c, d ， 其中 d 包含 的 v(version), profile, data
-// 2. 為什麼我剛剛設定的 profile 沒有複寫上去呢 ? 是因為大小寫有別嗎 ? 我用到的修改指令是 ("PROFILE", "0323_01")
-
-
-//先更新使用者的訊息
-Document suQry = new Document("s","APConfig").append("c", "setUser")
-.append("d", new Document("COMPANY", "ss2").append("PRODUCT", "ffm")
-.append("USER", "historydata").append("profile", "0323_01")
-.append("data", new Document("say","hello"))).append("r", "threadID");
-
-{"s":"APConfig","c":"setUser","d":{"msg":"Update Success."},"cd":0,"r":"threadID","lt":true}
-//-------------------
-
-//取得上次更新的那筆資料
-Document guQry1 = new Document("s","APConfig").append("c", "getUser")
-.append("d", new Document("COMPANY", "ss2").append("PRODUCT", "ffm")
-.append("USER", "historydata").append("profile", "0323_01")
-.append("data", new Document("say","hello"))).append("r", "threadID");
-
-{"s":"APConfig","c":"getUser","d":{"v":1,"profile":"0323_01","data":{"say":"hello"}},"cd":0,"r":"threadID","lt":true}
-//==============================================
-
-//我把搜尋結果直接打印
- so.sendJson(this, cmd, DocumentHelper.toJson(dbDoc), 0, r, true);
-
-Document guQry = new Document("s","APConfig").append("c", "getUser")
-.append("d", new Document("COMPANY", "ss2").append("PRODUCT", "ffm")
-.append("USER", "historydata"));
-
-
-{
-  "d": {
-    "_id": {
-      "$oid": "5bc944f5ffaa1525250952d4"
-    },
-    "company": "ss2",
-    "product": "ffm",
-    "profile": "default",
-    "user": "historydata",
-    "data": {
-      "data": {
-        "say": "hello"
-      }
-    },
-    "v": 20,
-    "filter": {
-      "company": "ss2",
-      "product": "ffm",
-      "user": "historydata",
-      "profile": "default"
-    }
-  }
-}
-//====================觀察======================
-// 1. 要搜尋的條件都整理進去 識別字串 d 裏頭
-// 2. 沒寫 profile 的條件，就會以 profile="default" 去搜尋
-```
-
-
-
-
-
-
-
-
-
-
-
-## setUser  失敗回傳
-
-```json
-	Document setUserQry = new Document("s","APConfig").append("c", "setUser")
-							.append("d", new Document("profile", "0323_1")).append("r", "threadID");
-
-{
-  "s": "APConfig",
-  "c": "setUser",
-  "d": {
-    "msg": "No config data."
-  },
-  "cd": -18,
-  "r": "threadID",
-  "lt": true
-}
-
-//=================================================
-{
-  "s": "APConfig",
-  "c": "setUser",
-  "d": {
-    "msg": "Loss token \"d\""
-  },
-  "cd": -14,
-  "r": "threadID",
-  "lt": true
-}
-
-//=====================總結========================
-//結合上述的兩則訊息來看， 要setUser 必須滿足兩點
-// 1. 傳送指令必須有識別字串 s, c, d ，其中 d 必須包含 data這個子標籤
-// 2. data 描述的 Config 必須在資料庫確實存在
 
 ```
 
-## setUser成功指令,回傳
+## 
 
 ```json
-//指令
-{
-  "s": "APConfig",
-  "c": "setUser",
-  "d": {
-    "COMPANY": "ss2",
-    "PRODUCT": "ffm",
-    "USER": "historydata",
-    "PROFILE": "0323_01",
-    "data": {
-      "data": {
-        "say": "hello"
-      }
-    }
-  },
-  "r": "threadID"
-}
 
-//回傳
-{
-  "s": "APConfig",
-  "c": "setUser",
-  "d": {
-    "msg": "Update Success."
-  },
-  "cd": 0,
-  "r": "threadID",
-  "lt": true
-}
+
+```
+
+## BOCmd 接收到 APConfigJobHandler 轉發的訊息
+
+```JSON
+//我在Client端setConfig， APConfigJobHandler確實把東西透過 svc_APConfig:Queue_TransferStation 傳給 BOCmd
+
+2021-03-24 12:13:27.856 [Thread-8] INFO  APConfig - (dispatcher@ff4eb9fcea1149458083dab093b168ee | TransferStation){"sc":"ss2:ffm:historydata","msg":"{\"u\":{\"0324_HelloWorld\":1}}"}
 
 ```
 
