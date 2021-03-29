@@ -58,3 +58,126 @@
 {"sc":"ss2","msg":"{\"c\":{\"default\":10}}"}
 ```
 
+
+
+# setConfig程式碼留存
+
+```java
+/**
+* setUser 和 setExUser 都可以新增使用者，後者比前者多了 Product, User 的自由度
+* pu:candyhouse:scheepy 
+* 
+* @cmd {"s": 服務名稱, "c": 指令, "d":{profile or cpu , "data":{其他資料(可空) }}}
+* Notice that s, c, d.data 的結構不可少
+*/
+
+//只有profile | "msg":"No config data." 
+//可從 APConfigJobHandler的 Method setConfig 裏頭看到 d.data 為必要訊息。
+Document onlypfile = new Document("s","APConfig").append("c", "setExProduct")
+	.append("d", new Document("profile", "只有profile1").append("product", "spy's product 2").append("data", new Document())).append("r", "只有profile");
+sess.getRemote().sendString(DocumentHelper.toJson(onlypfile));
+
+//沒有EX的情況下，只有profile的自由度
+Document onlydata = new Document("s","APConfig").append("c", "setUser")
+	.append("d", new Document("product","candyhouse").append("user", "scheepy").append("data", new Document("descrip1","onlydata1"))).append("r", "onlydata");
+sess.getRemote().sendString(DocumentHelper.toJson(onlydata));
+
+//all | "d":{"msg":"No config data."},"cd":-18 | 錯誤原因是因為 d 裏頭不包含 data 子標籤
+Document cpupfile = new Document("s","APConfig").append("c", "setUser")
+ 	.append("d", new Document("profile", "cpupfile").append("company", "sheepOne")
+  	.append("product", "candyHouse").append("user","scheepy")).append("r", "cpupfile");
+sess.getRemote().sendString(DocumentHelper.toJson(cpupfile));
+
+//setUser + d.data
+Document cpupfile = new Document("s","APConfig").append("c", "setUser")
+    .append("d", new Document("profile", "setUser + d.data").append("company", "sheepone")
+    .append("product", "candyhouse").append("user", "scheepy")
+    .append("data", new Document())	).append("r", "setUser + d.data");
+sess.getRemote().sendString(DocumentHelper.toJson(cpupfile));
+
+//setUser + d(empty).data
+Document cpupfile = new Document("s","APConfig").append("c", "setUser")
+    .append("d", new Document().append("data", new Document("description","d裏頭沒有profile也沒有cpu")))
+    .append("r", "setUser + d(empty).data");
+sess.getRemote().sendString(DocumentHelper.toJson(cpupfile));
+
+//setUser + d(empty).data(empty)
+Document cpupfile = new Document("s","APConfig").append("c", "setUser")
+    .append("d", new Document().append("data", new Document("","")) ).append("r", "setUser + d(empty).data(empty)");
+sess.getRemote().sendString(DocumentHelper.toJson(cpupfile));
+
+//setExUser	
+Document cpupfile = new Document("s","APConfig").append("c", "setExUser")
+    .append("d", new Document("profile", "cpupfile").append("company", "sheepone")
+    .append("product", "candyhouse").append("user","scheepy").append("data", new Document())).append("r", "cpupfile");
+sess.getRemote().sendString(DocumentHelper.toJson(cpupfile));
+
+
+
+/****************************************
+ * 造出 getConfig , search, etc... 需要的資料
+ * setExUser's "product":"myproduct", "user":"free_user"
+ * **************************************/
+					
+Document sugQry = new Document("s","APConfig").append("c", "setUser")
+    .append("d", new Document("profile","setUser 造出的第2筆").append("data", new Document()));
+sess.getRemote().sendString(DocumentHelper.toJson(sugQry));
+				
+Document sugQry = new Document("s","APConfig").append("c", "setExUser")
+.append("d", new Document("profile","setExUser 造出的第2筆").append("product", "myproduct")
+.append("user", "free_user").append("data", new Document()));
+sess.getRemote().sendString(DocumentHelper.toJson(sugQry));
+
+
+//==================setExCompany========================
+/***************************
+* 查看 setExCompany的filter
+***************************/
+				
+Document secy = new Document("s","APConfig").append("c", "setExCompany")
+    .append("d", new Document("company","ss3").append("product", "myproduct").append("user", "free_user").append("data", new Document()));
+sess.getRemote().sendString(DocumentHelper.toJson(secy));
+				
+Document decy = new Document("s","APConfig").append("c", "delCompany")
+    .append("d", new Document("company","ss2").append("profile", "default9").append("data", new Document()) );
+sess.getRemote().sendString(DocumentHelper.toJson(decy));
+				
+//刪除產品
+Document depdct = new Document("s","APConfig").append("c", "delExProduct")
+    .append("d", new Document("company","ss2").append("product", "ffm").append("profile", "沒有輸入使用者，我要搭配測試getExProduct").append("data", new Document()));
+sess.getRemote().sendString(DocumentHelper.toJson(depdct));
+				
+//刪除使用者
+Document temp = new Document("product", "").append("user", "abc");
+Document data = new Document().append("d", temp);
+Document depdct = new Document("s","APConfig").append("c", "delExUser").append("d", temp);
+System.out.println(DocumentHelper.toJson(depdct));
+sess.getRemote().sendString(DocumentHelper.toJson(depdct));
+				
+Document gepdct = new Document("s","APConfig").append("c", "delUser")
+    .append("d", new Document("company","ss2").append("product", "myproduct").append("user", "free_user").append("profile", "setUser 造出的第2筆").append("data", new Document()));
+sess.getRemote().sendString(DocumentHelper.toJson(gepdct));
+			
+//++++++++++++++++++++++++
+//按照 EX展開key的指令
+Document delAbc = new Document("s", "APConfig").append("c", "delExUser")
+    .append("d", new Document("company","ss2").append("product", new Document("$exists", false)).append("user", "abc") );
+System.out.println(DocumentHelper.toJson(delAbc));
+				
+//EX指令展開
+Document showdelExC = new Document("s", "APConfig").append("c", "delExProduct")
+    .append("d", new Document());
+sess.getRemote().sendString(DocumentHelper.toJson(showdelExC));
+				
+//把d的部分分開來
+Document stepDel = new Document("s","APConfig").append("c", "delExUser");
+stepDel.append("d", new Document().append("company", "ss2").append("product", new Document("$exists",false)).append("user", "abc")
+               .append("data", new Document()));
+System.out.println(DocumentHelper.toJson(stepDel));
+System.out.println("=====================");
+sess.getRemote().sendString(DocumentHelper.toJson(stepDel));
+sess.getRemote().sendString(stepDel.toJson());
+				
+		
+```
+
